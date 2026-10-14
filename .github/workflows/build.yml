@@ -14,9 +14,13 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Download offline libs
+        working-directory: OpenAppz
         run: ./gradlew downloadDependencies
+      - name: Build App
+        working-directory: OpenAppz
+        run: ./gradlew assembleRelease
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: app/build/outputs/apk/release/app-release-unsigned.apk
+          path: OpenAppz/app/build/outputs/apk/release/app-release-unsigned.apk
