@@ -2,22 +2,22 @@
     build:
     runs-on: ubuntu-latest
     defaults:
-    run:
-    working-directory: OpenAppz
+     run:
+       working-directory: OpenAppz
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-java@v4
     with:
-    distribution: temurin
+     distribution: temurin
      java-version: 17
     - uses: gradle/actions/setup-gradle@v4
     with:
-    build-root-directory: OpenAppz
+     build-root-directory: OpenAppz
     - name: Download offline libs
-    run: bash scripts/download-libs.sh
+     run: bash scripts/download-libs.sh
     - name: Build APK
-    run: chmod +x gradlew && ./gradlew assembleDebug
+     run: chmod +x gradlew && ./gradlew assembleDebug
     - uses: actions/upload-artifact@v4
     with:
-    name: app-debug
-    path: OpenAppz/app/build/outputs/apk/debug/*.apk
+     name: app-debug
+     path: OpenAppz/app/build/outputs/apk/debug/*.apk
