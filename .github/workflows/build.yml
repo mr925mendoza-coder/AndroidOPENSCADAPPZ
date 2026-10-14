@@ -7,17 +7,17 @@
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-java@v4
-    with:
+      with:
      distribution: temurin
      java-version: 17
     - uses: gradle/actions/setup-gradle@v4
-    with:
+      with:
      build-root-directory: OpenAppz
     - name: Download offline libs
      run: bash scripts/download-libs.sh
     - name: Build APK
      run: chmod +x gradlew && ./gradlew assembleDebug
     - uses: actions/upload-artifact@v4
-    with:
+      with:
      name: app-debug
      path: OpenAppz/app/build/outputs/apk/debug/*.apk
