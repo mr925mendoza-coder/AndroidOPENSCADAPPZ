@@ -29,7 +29,16 @@ jobs:
         run: bash OpenAppz/download-libs.sh
 
       - name: Build Android APK
-        run: gradle --no-daemon assembleDebug
+        shell: bash
+        run: gradle --no-daemon assembleDebug --stacktrace 2>&1 | tee build.log
+
+      - name: Show build error
+        if: failure()
+        shell: bash
+        run: |
+          msg=$(grep -A 15 -m1 "What went wrong" build.log | tr '\n' '|' || true)
+          errs=$(grep -m8 -E "^e: |error:" build.log | tr '\n' '|' || true)
+          echo "::error title=Gradle error::${msg} ${errs}"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
