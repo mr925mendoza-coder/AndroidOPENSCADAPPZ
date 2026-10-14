@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace AndroidManifest.xml
+    namespace "your.package.name"
     compileSdk 34
 
     defaultConfig {
