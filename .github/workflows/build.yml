@@ -32,37 +32,30 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y wget unzip
-          mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
+          mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
           wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O /tmp/cmdline.zip
-          unzip /tmp/cmdline.zip -d $ANDROID_SDK_ROOT/cmdline-tools
+          unzip /tmp/cmdline.zip -d "$ANDROID_SDK_ROOT/cmdline-tools"
           if [ -d "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" ]; then
-            mv $ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools $ANDROID_SDK_ROOT/cmdline-tools/latest
+            mv "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" "$ANDROID_SDK_ROOT/cmdline-tools/latest"
           else
-            mv $ANDROID_SDK_ROOT/cmdline-tools/* $ANDROID_SDK_ROOT/cmdline-tools/latest || true
+            mv "$ANDROID_SDK_ROOT/cmdline-tools"/* "$ANDROID_SDK_ROOT/cmdline-tools/latest" || true
           fi
-          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
-          yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"
-          yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses || true
+          export PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH"
+          yes | sdkmanager --sdk_root="$ANDROID_SDK_ROOT" --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          yes | sdkmanager --sdk_root="$ANDROID_SDK_ROOT" --licenses || true
 
       - name: Download offline JS libs
         run: bash OpenAppz/download-libs.sh
 
       - name: Make gradlew executable
-        run: chmod +x ./gradlew || true
+        run: chmod +x ./gradlew
 
       - name: Build Android APK
         shell: bash
         env:
           ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
         run: |
-          # Prefer the Gradle wrapper if present at repo root, otherwise use installed gradle and target the app module explicitly
-          if [ -x "./gradlew" ]; then
-            echo "Using Gradle wrapper ./gradlew"
-            ./gradlew --no-daemon assembleDebug --stacktrace 2>&1 | tee build.log
-          else
-            echo "Gradle wrapper not found; using installed gradle to build :OpenAppz:app:assembleDebug"
-            gradle --no-daemon :OpenAppz:app:assembleDebug --stacktrace 2>&1 | tee build.log
-          fi
+          ./gradlew --no-daemon :app:assembleDebug --stacktrace 2>&1 | tee build.log
 
       - name: Show build error
         if: failure()
