@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DEST="$(dirname "$0")/../app/src/main/assets/libs"
+DEST="$(dirname "$0")/app/src/main/assets/libs"
 mkdir -p "$DEST"
 
 # name|url (pin exact versions)
