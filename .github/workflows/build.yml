@@ -28,7 +28,7 @@ jobs:
           build-root-directory: OpenAppz
 
       - name: Download offline libs
-        run: bash scripts/download-libs.sh
+        run: bash scripts/Download-libs.sh
 
       - name: Build APK
         run: chmod +x gradlew && ./gradlew assembleDebug
