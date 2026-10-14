@@ -5,13 +5,14 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
     }
 }
 
-rootProject.name = "OpenAppz"
+rootProject.name = 'OpenAppz'
 include ':app'
+project(':app').projectDir = new File(settingsDir, 'OpenAppz/app')
