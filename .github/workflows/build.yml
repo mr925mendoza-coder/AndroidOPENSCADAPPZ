@@ -10,8 +10,8 @@
       with:
          distribution: temurin
          java-version: 17
-    - uses: gradle/actions/setup-gradle@v4
-          with:
+        - uses: gradle/actions/setup-gradle@v4
+     with:
      build-root-directory: OpenAppz
     - name: Download offline libs
      run: bash scripts/download-libs.sh
