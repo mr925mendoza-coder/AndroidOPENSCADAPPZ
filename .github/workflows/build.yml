@@ -1,4 +1,4 @@
-name: Build APK
+name: name: Build Android APK shell: bash env: ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }} run: |
 
 on:
   push:
