@@ -1,4 +1,4 @@
-name: Build Android APK shell: bash env: ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }} run: |
+name: Build APK
 
 on:
   push:
@@ -54,7 +54,15 @@ jobs:
         shell: bash
         env:
           ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
-        run: ./gradlew --no-daemon assembleDebug --stacktrace 2>&1 | tee build.log
+        run: |
+          # Prefer the Gradle wrapper if present at repo root, otherwise use installed gradle and target the app module explicitly
+          if [ -x "./gradlew" ]; then
+            echo "Using Gradle wrapper ./gradlew"
+            ./gradlew --no-daemon assembleDebug --stacktrace 2>&1 | tee build.log
+          else
+            echo "Gradle wrapper not found; using installed gradle to build :OpenAppz:app:assembleDebug"
+            gradle --no-daemon :OpenAppz:app:assembleDebug --stacktrace 2>&1 | tee build.log
+          fi
 
       - name: Show build error
         if: failure()
