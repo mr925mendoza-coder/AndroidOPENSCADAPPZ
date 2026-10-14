@@ -23,4 +23,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: OpenAppz/app/build/outputs/apk/release/app-release-unsigned.apk
+          path: OpenAppz/app/build/outputs/apk/release/*.apk
