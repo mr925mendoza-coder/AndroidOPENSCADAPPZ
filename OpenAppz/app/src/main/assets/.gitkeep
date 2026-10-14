@@ -1,1 +1,3 @@
-file:///android_asset/libs/react.min.js.
+android {
+    namespace = "your.package.name"
+}
