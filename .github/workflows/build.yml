@@ -25,8 +25,8 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Create Gradle Wrapper
-        run: gradle wrapper --gradle-version 8.9
+      - name: Download offline JS libs
+        run: bash OpenAppz/scripts/download-libs.sh
 
       - name: Build Android APK
         run: gradle --no-daemon assembleDebug
@@ -37,5 +37,3 @@ jobs:
           name: OpenAppz-debug-APK
           path: OpenAppz/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
-      - name: Download offline JS libs
-        run: bash OpenAppz/scripts/download-libs.sh
