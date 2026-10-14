@@ -10,7 +10,7 @@ jobs:
       - uses: android-actions/setup-android@v4
       - uses: gradle/actions/setup-gradle@v4
       - run: gradle assembleDebug
-        working-directory: OpenApp
+        working-directory: OpenAppz
       - uses: actions/upload-artifact@v4
         with:
           name: app-debug
