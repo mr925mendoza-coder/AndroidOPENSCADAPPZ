@@ -4,7 +4,7 @@
     defaults:
     run:
     working-directory: OpenAppz
-    steps:
+     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-java@v4
     with:
