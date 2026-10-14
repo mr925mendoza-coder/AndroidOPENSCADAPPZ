@@ -20,7 +20,7 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Gradle
+      - name: Set up Gradle (system)
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
@@ -47,15 +47,26 @@ jobs:
       - name: Download offline JS libs
         run: bash OpenAppz/download-libs.sh
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
+      - name: Make gradlew executable if present
+        run: |
+          if [ -f ./gradlew ]; then
+            chmod +x ./gradlew
+          else
+            echo "gradlew not found in repo root; will use system gradle"
+          fi
 
       - name: Build Android APK
         shell: bash
         env:
           ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
         run: |
-          ./gradlew --no-daemon :app:assembleDebug --stacktrace 2>&1 | tee build.log
+          if [ -x "./gradlew" ]; then
+            echo "Using Gradle wrapper"
+            ./gradlew --no-daemon :app:assembleDebug --stacktrace 2>&1 | tee build.log
+          else
+            echo "Gradle wrapper not found; using system gradle"
+            gradle --no-daemon :app:assembleDebug --stacktrace 2>&1 | tee build.log
+          fi
 
       - name: Show build error
         if: failure()
