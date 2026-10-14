@@ -6,6 +6,9 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,63 +23,38 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Gradle (system)
+      - name: Set up Gradle 8.9
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
 
-      - name: Set ANDROID_SDK_ROOT
-        run: echo "ANDROID_SDK_ROOT=$HOME/Android/Sdk" >> $GITHUB_ENV
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
 
-      - name: Install Android command-line tools and SDK 34
+      - name: Install Android SDK packages
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-          mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
-          wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O /tmp/cmdline.zip
-          unzip /tmp/cmdline.zip -d "$ANDROID_SDK_ROOT/cmdline-tools"
-          if [ -d "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" ]; then
-            mv "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" "$ANDROID_SDK_ROOT/cmdline-tools/latest"
-          else
-            mv "$ANDROID_SDK_ROOT/cmdline-tools"/* "$ANDROID_SDK_ROOT/cmdline-tools/latest" || true
-          fi
-          export PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH"
-          yes | sdkmanager --sdk_root="$ANDROID_SDK_ROOT" --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"
-          yes | sdkmanager --sdk_root="$ANDROID_SDK_ROOT" --licenses || true
+          sdkmanager "platform-tools"
+          sdkmanager "platforms;android-34"
+          sdkmanager "build-tools;34.0.0"
 
-      - name: Download offline JS libs
+      - name: Download JavaScript libraries
         run: |
-          chmod +x OpenAppz/download-libs.sh || true
           bash OpenAppz/download-libs.sh
 
-      - name: Make gradlew executable if present
+      - name: Verify required Android files
         run: |
-          if [ -f ./gradlew ]; then
-            chmod +x ./gradlew
-          else
-            echo "gradlew not found in repo root; will use system gradle"
-          fi
+          test -f settings.gradle
+          test -f build.gradle
+          test -f OpenAppz/app/build.gradle
+          test -f OpenAppz/app/src/main/AndroidManifest.xml
+          test -f OpenAppz/app/src/main/java/com/mr925mendoza/openscad/MainActivity.kt
+          test -f OpenAppz/app/src/main/res/values/strings.xml
 
-      - name: Build Android APK
-        shell: bash
-        env:
-          ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+      - name: Build Debug APK
         run: |
-          if [ -x "./gradlew" ]; then
-            echo "Using Gradle wrapper"
-            ./gradlew --no-daemon :app:assembleDebug --stacktrace 2>&1 | tee build.log
-          else
-            echo "Gradle wrapper not found; using system gradle"
-            gradle --no-daemon :app:assembleDebug --stacktrace 2>&1 | tee build.log
-          fi
-
-      - name: Show build error
-        if: failure()
-        shell: bash
-        run: |
-          msg=$(grep -A 15 -m1 "What went wrong" build.log | tr '\n' '|' || true)
-          errs=$(grep -m8 -E "^e: |error:" build.log | tr '\n' '|' || true)
-          echo "::error title=Gradle error::${msg} ${errs}"
+          gradle --no-daemon \
+            :app:assembleDebug \
+            --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
