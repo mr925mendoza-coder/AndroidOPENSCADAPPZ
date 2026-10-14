@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'REPLACE.WITH.YOUR.PACKAGE'
+    namespace AndroidManifest.xml
     compileSdk 34
 
     defaultConfig {
-        applicationId 'REPLACE.WITH.YOUR.PACKAGE'
+        applicationId AndroidManifest.xml
         minSdk 24
         targetSdk 34
         versionCode 1
