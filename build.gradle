@@ -1,4 +1,9 @@
 plugins {
-    id 'com.android.application' version '8.5.2' apply false
-    id 'org.jetbrains.kotlin.android' version '1.9.24' apply false
-}
+   android {
+    namespace "com.mr925mendoza.openscad"   // quoted string, real package name
+
+    defaultConfig {
+        applicationId "com.mr925mendoza.openscad"
+        // no AndroidManifest line here
+    }
+   }}
