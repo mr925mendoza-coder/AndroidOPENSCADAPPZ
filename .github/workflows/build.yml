@@ -45,7 +45,9 @@ jobs:
           yes | sdkmanager --sdk_root="$ANDROID_SDK_ROOT" --licenses || true
 
       - name: Download offline JS libs
-        run: bash OpenAppz/download-libs.sh
+        run: |
+          chmod +x OpenAppz/download-libs.sh || true
+          bash OpenAppz/download-libs.sh
 
       - name: Make gradlew executable if present
         run: |
