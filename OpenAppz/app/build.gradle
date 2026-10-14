@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace "your.package.name"
+    namespace "com.mr925mendoza.openscad"
     compileSdk 34
 
     defaultConfig {
