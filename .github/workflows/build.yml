@@ -37,3 +37,5 @@ jobs:
           name: OpenAppz-debug-APK
           path: OpenAppz/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+      - name: Download offline JS libs
+        run: bash OpenAppz/download-libs.sh
