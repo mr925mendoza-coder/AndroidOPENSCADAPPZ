@@ -31,7 +31,7 @@ jobs:
         run: bash scripts/Download-libs.sh
 
       - name: Build APK
-        run: chmod +x gradlew && ./gradlew assembleDebug
+        run: chmod +x ../gradlew && ../gradlew assembleDebug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
