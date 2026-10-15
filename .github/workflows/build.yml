@@ -17,6 +17,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Remove stale wrapper shadow dirs
+        run: |
+          rm -rf "CLASSPATH=\$APP_HOME"
+          rm -rf gardle
+          rm -f OpenAppz/gradle.wrap
+
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
@@ -53,7 +59,7 @@ jobs:
 
       - name: Build Debug APK
         run: |
-          gradle :app:assembleDebug --stacktrace --no-daemon
+          ./gradlew :app:assembleDebug --stacktrace --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
