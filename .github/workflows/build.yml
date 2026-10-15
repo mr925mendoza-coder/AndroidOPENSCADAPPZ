@@ -51,7 +51,7 @@ jobs:
           test -f OpenAppz/app/src/main/java/com/mr925mendoza/openscad/MainActivity.kt
           test -f OpenAppz/app/src/main/res/values/strings.xml
 
-      - name: Build Debug APK (use installed Gradle)
+      - name: Build Debug APK
         run: |
           gradle :app:assembleDebug --stacktrace --no-daemon
 
