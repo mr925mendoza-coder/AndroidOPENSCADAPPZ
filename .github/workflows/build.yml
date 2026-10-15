@@ -17,19 +17,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Ensure Gradle wrapper is executable
+      - name: Ensure Gradle wrapper is executable (optional)
         run: |
           if [ -f ./gradlew ]; then
             chmod +x ./gradlew
             ls -l ./gradlew
           else
-            echo "gradlew not found in repo root"
-            exit 1
+            echo "gradlew not found in repo root — continuing with system Gradle"
           fi
 
       - name: Remove stale wrapper shadow dirs
         run: |
-          rm -rf "CLASSPATH=\$APP_HOME"
+          rm -rf "CLASSPATH=$APP_HOME"
           rm -rf gardle
           rm -f OpenAppz/gradle.wrap
 
@@ -67,9 +66,16 @@ jobs:
           test -f OpenAppz/app/src/main/java/com/mr925mendoza/openscad/MainActivity.kt
           test -f OpenAppz/app/src/main/res/values/strings.xml
 
-      - name: Build Debug APK
+      - name: Build Debug APK (use wrapper if valid, otherwise system Gradle)
         run: |
-          ./gradlew :app:assembleDebug --stacktrace --no-daemon
+          # Prefer the project Gradle wrapper when the wrapper JAR exists.
+          if [ -x ./gradlew ] && [ -f ./gradle/wrapper/gradle-wrapper.jar ]; then
+            echo "Using project Gradle wrapper"
+            ./gradlew :app:assembleDebug --stacktrace --no-daemon
+          else
+            echo "Gradle wrapper is missing or incomplete; using system Gradle (installed by setup-gradle)"
+            gradle :app:assembleDebug --stacktrace --no-daemon
+          fi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
