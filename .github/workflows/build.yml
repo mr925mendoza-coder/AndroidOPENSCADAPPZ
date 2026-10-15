@@ -17,6 +17,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Ensure Gradle wrapper is executable
+        run: |
+          if [ -f ./gradlew ]; then
+            chmod +x ./gradlew
+            ls -l ./gradlew
+          else
+            echo "gradlew not found in repo root"
+            exit 1
+          fi
+
       - name: Remove stale wrapper shadow dirs
         run: |
           rm -rf "CLASSPATH=\$APP_HOME"
