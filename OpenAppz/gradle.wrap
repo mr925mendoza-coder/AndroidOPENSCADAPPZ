@@ -1,10 +1,2 @@
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: 8.9
-          build-root-directory: OpenAppz
-
-      - name: Generate Gradle wrapper
-        run: gradle wrapper --gradle-version 8.9
-
-      - name: Build APK
-        run: ./gradlew assembleDebug
+- name: Set executable permissions for Gradle wrapper
+  run: chmod +x ./gradlew
