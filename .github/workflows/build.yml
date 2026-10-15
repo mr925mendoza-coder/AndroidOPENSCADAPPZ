@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Java 17
@@ -51,10 +51,9 @@ jobs:
           test -f OpenAppz/app/src/main/java/com/mr925mendoza/openscad/MainActivity.kt
           test -f OpenAppz/app/src/main/res/values/strings.xml
 
-      - name: Build Debug APK
+      - name: Build Debug APK (use installed Gradle)
         run: |
-          chmod +x ./gradlew
-          ./gradlew :app:assembleDebug --stacktrace --no-daemon
+          gradle :app:assembleDebug --stacktrace --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
