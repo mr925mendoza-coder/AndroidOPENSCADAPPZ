@@ -1,2 +1,0 @@
-- name: Set executable permissions for Gradle wrapper
-  run: chmod +x ./gradlew
